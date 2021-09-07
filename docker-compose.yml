@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  db:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    volumes:
+      - "$PWD/schema:/docker-entrypoint-initdb.d"
+      - "$PWD/data:/var/lib/mysql"
+    environment:
+      MYSQL_DATABASE: shopping_list
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: mysql -uroot -ppassword -e 'SHOW CREATE TABLE shopping_list.item'
+      timeout: 5s
+      retries: 40
+  api:
+    container_name: api
+    image: node:13.12.0-alpine
+    tty: true
+    working_dir: "/app"
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: shopping_list
+    volumes:
+      - '$PWD/api:/app'
+    ports:
+      - 3001:3030
+    command: "npx nodemon src/index.js"
+    depends_on:
+      db:
+        condition: service_healthy
+  client:
+    container_name: client
+    image: node:13.12.0-alpine
+    tty: true
+    working_dir: "/app"
+    volumes:
+      - '$PWD/client:/app'
+    ports:
+      - 3000:3000
+    command: "npm run start"
+    environment:
+      CHOKIDAR_POLLING: 1
+      REACT_APP_API_ROOT: "http://localhost:3001"
+    depends_on:
+      - api

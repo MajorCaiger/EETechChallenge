@@ -1,0 +1,21 @@
+.new-item-form {
+    margin-bottom: 20px;
+}
+
+.new-item-form label {
+    display: block;
+}
+
+.new-item-form .field {
+    display: flex;
+    flex-direction: row;
+}
+
+.new-item-form .field input {
+    flex: 1 1 auto;
+}
+
+.new-item-form .field button {
+    margin-left: 10px;
+    flex: 0 0 auto;
+}

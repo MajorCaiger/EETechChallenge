@@ -1,0 +1,15 @@
+.item {
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid #efefef;
+    padding: 10px 0;
+}
+
+.item input {
+    margin-right: 20px;
+}
+
+.complete {
+    opacity: 50%;
+    text-decoration: line-through;
+}
